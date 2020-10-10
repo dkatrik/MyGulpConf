@@ -38,7 +38,6 @@ let rename = require("gulp-rename");
 let groupMedia = require('gulp-group-css-media-queries');
 let babel = require('gulp-babel');
 let imagemin = require('gulp-imagemin');
-let Gfonts = require('gulp-google-webfonts')
 
 function browserReload() {
 	browserSync.init({
@@ -93,14 +92,6 @@ function images() {
 		.pipe(dest(path.build.img))
 }
 
-function fonts() {
-	return gulp.src(path.src.fonts + 'font.list')
-		.pipe(Gfonts({
-			cssFilename: 'myGoogleFonts.css',
-		}))
-		.pipe(dest(path.build.fonts))
-}
-
 function wathcFiles() {
 	gulp.watch([path.watch.html], html);
 	gulp.watch([path.watch.css], css);
@@ -115,23 +106,14 @@ function cleanImages() {
 	return del([path.build.img])
 }
 
-function cleanFonts() {
-	return del([path.build.fonts])
-}
-
-let build = gulp.series(clean, gulp.parallel(js, css, html,));
-let watch = gulp.parallel(build, wathcFiles, browserReload);
-
-exports.fonts = fonts
-exports.images = images;
-exports.cleanImages = cleanImages
-exports.cleanFonts = cleanFonts
 exports.js = js;
 exports.css = css;
 exports.html = html;
 exports.clean = clean;
+exports.images = images
+exports.cleanImages = cleanImages
 
 exports.default = watch;
-exports.build = build;
-exports.watch = watch;
-exports.files = gulp.series(gulp.parallel(cleanImages, cleanFonts), fonts, images)
+exports.build = gulp.series(clean, gulp.parallel(js, css, html,));
+exports.watch = gulp.parallel(build, wathcFiles, browserReload);
+exports.images = gulp.series()
