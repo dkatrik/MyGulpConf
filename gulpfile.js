@@ -7,21 +7,19 @@ let path = {
 		css: project_folder + '/css/',
 		js: project_folder + '/js/',
 		img: project_folder + '/img/',
-		fonts: project_folder + '/fonts/',
 	},
 	src: {
-		html: source_folder + '/pug/*.pug',
-		css: source_folder + '/scss/style.scss',
-		js: source_folder + '/js/script.js',
-		img: source_folder + '/img/**/*',
-		fonts: source_folder + '/fonts/',
+		html: source_folder + '/*.pug',
+		css: source_folder + '/scss/main.scss',
+		js: source_folder + '/js/main.js',
+		img: source_folder + '/img/*.*',
 	},
 	watch: {
-		html: source_folder + '/pug/**/*.pug',
-		css: source_folder + '/scss/**/*.scss',
-		js: source_folder + '/js/**/*.js',
-		img: source_folder + '/img/**/*',
-		fonts: source_folder + '/fonts/*.ttf',
+		modules: source_folder + '/modules/**/*.*',
+		html: source_folder + '/*.pug',
+		css: source_folder + '/scss/*.scss',
+		js: source_folder + '/js/*.js',
+		img: source_folder + '/img/*.*',
 	},
 }
 
@@ -96,6 +94,7 @@ function wathcFiles() {
 	gulp.watch([path.watch.html], html);
 	gulp.watch([path.watch.css], css);
 	gulp.watch([path.watch.js], js);
+	gulp.watch([path.watch.modules]);
 }
 
 function clean() {
@@ -113,7 +112,7 @@ exports.clean = clean;
 exports.images = images
 exports.cleanImages = cleanImages
 
-exports.default = watch;
-exports.build = gulp.series(clean, gulp.parallel(js, css, html,));
-exports.watch = gulp.parallel(build, wathcFiles, browserReload);
-exports.images = gulp.series()
+exports.default = gulp.parallel(gulp.series(clean, gulp.parallel(js, css, html)), wathcFiles, browserReload);
+exports.build = gulp.series(clean, gulp.parallel(js, css, html));
+exports.watch = gulp.parallel(gulp.series(clean, gulp.parallel(js, css, html)), wathcFiles, browserReload);
+exports.images = gulp.series(cleanImages, images)
